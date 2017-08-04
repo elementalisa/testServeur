@@ -1,0 +1,50 @@
+<!doctype html>  
+<html lang="fr">  
+    <head>
+		<title>testServeur</title>
+		<script src="/jquery/dist/jquery.js"></script>
+		<script src="/socket.io/socket.io.js"></script>
+		<script src="/js/script.js"></script>
+    	<link rel="stylesheet" type="text/css" href="css.css">
+    	<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.css">
+		<meta charset="UTF-8">
+    </head>
+    <body>
+        <h1>MonServeurWeb</h1>
+        <div id="infoServeur"></div>
+        <div id="InfoCpu"></div>
+        <br/>
+        <div class="container">
+			<div class="row">
+				<div class="col-xs-12 col-sm-10 col-lg-6">
+					<div class="panel panel-default">
+						<div class="panel-body"><table class="table table-bordered" id="ramInfo"></table></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="/socket.io/socket.io.js"></script>
+		<script>  
+		 var socket = io.connect('http://172.16.12.110:8080');
+		 socket.on('connect', function(data) {
+			socket.emit('join', 'Hello World from client');
+		 });
+		 
+		 socket.on('serverInfo', function(data) {
+			document.getElementById("infoServeur").innerHTML =data;
+		 });
+
+		 socket.on('cpuInfo', function(data){
+			//document.getElementById("InfoCpu").innerHTML =data;
+			var myJsonString = JSON.stringify(data);
+			var replaceJson = myJsonString.replace('\\n', '<br>');
+			document.getElementById("InfoCpu").innerHTML =replaceJson;
+		 });
+
+		 socket.on('infoRam', function(data){
+			//document.getElementById("ramInfo").innerHTML =data;
+			$("#ramInfo").html(data);
+		 });
+		</script>
+    </body>
+</html>
